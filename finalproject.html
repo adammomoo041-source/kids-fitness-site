@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>موقع الصحة والرياضة للأطفال</title>
+<style>
+:root {
+    --bg:#F6FAFF; --bg-dark:#0B1020; --primary:#6C63FF; --accent:#4EC5A8; --text:#0E1730; --star:#FFD166;
+}
+body {
+    margin:0; padding:0; font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); transition:.4s; overflow-x:hidden;
+}
+.dark{background:var(--bg-dark); color:white;}
+header{display:flex; justify-content:space-between; align-items:center; padding:15px 20px;}
+button{border:none; cursor:pointer; padding:10px 18px; border-radius:14px; font-size:16px; transition:.3s;}
+.btn-primary{background:linear-gradient(90deg,var(--primary),var(--accent)); color:white;}
+.btn-primary:hover{transform: scale(1.05);}
+.hero{text-align:center; padding:30px 20px;}
+.container{padding:20px; display:grid; gap:20px;}
+.card{background:white; border-radius:18px; padding:20px; box-shadow:0 4px 12px rgba(0,0,0,.08); transition:.3s; text-align:center;}
+.dark .card{background:#1A2035;}
+.card:hover{transform:scale(1.03);}
+.page{display:none; padding:20px;}
+#timerModal{position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.7); display:none; justify-content:center; align-items:center;}
+#timerBox{background:white; padding:30px; border-radius:16px; width:260px; text-align:center;}
+.dark #timerBox{background:#1A2035;color:white;}
+.exercise-img{width:150px; height:150px; display:block; margin:10px auto; object-fit:cover; border-radius:12px;}
+
+/* خطوط زرقاء هادية متحركة */
+@keyframes moveLines {
+    0% {background-position:0 0;}
+    100% {background-position:1000px 0;}
+}
+body::before {
+    content:""; position:fixed; top:0; left:0; width:200%; height:200%; background: repeating-linear-gradient(45deg, rgba(108,99,255,0.1) 0 2px, transparent 2px 10px); animation: moveLines 50s linear infinite; z-index:-1;
+}
+
+footer{text-align:center; padding:10px; font-size:14px; color:gray;}
+</style>
+</head>
+<body>
+<header>
+<h2>🏃‍♂️ صحة ورياضة</h2>
+<button id="toggleMode">🌙</button>
+</header>
+
+<section class="hero">
+<h1>يلا نتحرك!</h1>
+<p>تمارين ممتعة ومناسبة لعمرك ومستواك 🔥</p>
+<button class="btn-primary" onclick="goTo('ex')">ابدأ التمرين</button>
+</section>
+
+<section class="container">
+<div class="card" onclick="goTo('ex')"><h3>💪 تمارين</h3><p>تمارين حسب عمرك</p></div>
+<div class="card" onclick="goTo('re')"><h3>⭐ النقاط</h3><p>اجمع نجماتك</p></div>
+<div class="card" onclick="goTo('nu')"><h3>🍎 التغذية الصحية</h3><p>أكل صحي للأطفال</p></div>
+<div class="card" onclick="goTo('kid')"><h3>🎨 Kids Zone</h3><p>منطقة تفاعلية ممتعة</p></div>
+<div class="card" onclick="goTo('st')"><h3>⚙️ الإعدادات</h3><p>حدد سنك ومستواك</p></div>
+</section>
+
+<section id="ex" class="page">
+<h2>💪 قائمة التمارين</h2>
+<p id="levelShow"></p>
+<div class="card">
+<h3>تمرين إطالة — 30 ثانية</h3>
+<img id="imgStretch" class="exercise-img" src="stretch.gif">
+<button class="btn-primary" onclick="startTimerWithImg(30,'imgStretch')">ابدأ</button>
+</div>
+<div class="card">
+<h3>تمرين تنفس — 20 ثانية</h3>
+<img id="imgBreath" class="exercise-img" src="breath.gif">
+<button class="btn-primary" onclick="startTimerWithImg(20,'imgBreath')">ابدأ</button>
+</div>
+<div class="card">
+<h3>تمرين القفز — 25 ثانية</h3>
+<img id="imgJump" class="exercise-img" src="jump.gif">
+<button class="btn-primary" onclick="startTimerWithImg(25,'imgJump')">ابدأ</button>
+</div>
+<button onclick="home()">⬅ رجوع</button>
+</section>
+
+<section id="re" class="page">
+<h2>⭐ نقاطك</h2>
+<h3 id="points">0</h3>
+<p>اجمع 10 للحصول على مستوى أعلى!</p>
+<button class="btn-primary" id="resetBtn">🔄 إعادة ضبط النقاط</button>
+<button onclick="home()">⬅ رجوع</button>
+</section>
+
+<section id="nu" class="page">
+<h2>🍎 التغذية الصحية</h2>
+<div class="card"><h3>🥕 خضروات</h3><p>تمد الجسم بالفيتامينات</p></div>
+<div class="card"><h3>🍎 فواكه</h3><p>طاقة صحية ولذيذة</p></div>
+<div class="card"><h3>💧 مياه</h3><p>شرب 5-6 أكواب يوميًا</p></div>
+<button onclick="home()">⬅ رجوع</button>
+</section>
+
+<section id="kid" class="page">
+<h2>🎨 منطقة الأطفال</h2>
+<p>المس الدوائر وشوف التفاعل!</p>
+<div class="card" onclick="alert('✨ رائع!')">⭕ دائرة سحرية</div>
+<div class="card" onclick="alert('🌟 أحسنت!')">🟣 دائرة مضيئة</div>
+<button onclick="home()">⬅ رجوع</button>
+</section>
+
+<section id="st" class="page">
+<h2>⚙️ الإعدادات</h2>
+<label>سن الطفل:</label><br><br>
+<input type="number" id="age" min="5" max="12" /><br><br>
+<button class="btn-primary" onclick="saveAge()">حفظ</button><br><br>
+<p id="savedLevel"></p>
+<button onclick="home()">⬅ رجوع</button>
+</section>
+
+<div id="timerModal">
+<div id="timerBox">
+<h2>⏳ جاري التمرين</h2>
+<h1 id="count">0</h1>
+<button onclick="closeTimer()">إغلاق</button>
+</div>
+</div>
+
+<footer>تم انشائه بواسطة ادم محمد ابو حسين</footer>
+
+<script>
+let points = Number(localStorage.getItem('points')) || 0;
+let level = localStorage.getItem('level') || 'مبتدئ';
+const levels = ['مبتدئ','متوسط','نشيط','متقدم','محترف'];
+
+function updateLevelDisplay(){
+    document.getElementById('points').innerText = points;
+    document.getElementById('levelShow').innerText = "مستواك الحالي: "+level;
+}
+
+function goTo(id){
+    document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+    document.getElementById(id).style.display='block';
+    updateLevelDisplay();
+}
+
+function home(){ document.querySelectorAll('.page').forEach(p=>p.style.display='none'); }
+
+document.getElementById('toggleMode').onclick = ()=>{ document.body.classList.toggle('dark'); }
+
+function saveAge(){
+    let age = document.getElementById('age').value;
+    if(!age) return;
+    if(age>=5 && age<=7) level='مبتدئ';
+    else if(age>=8 && age<=10) level='متوسط';
+    else if(age>=11 && age<=12) level='نشيط';
+    localStorage.setItem('age',age);
+    localStorage.setItem('level',level);
+    document.getElementById('savedLevel').innerText="تم حفظ المستوى: "+level;
+    updateLevelDisplay();
+}
+
+let timer;
+function startTimerWithImg(sec,imgId){
+    document.getElementById(imgId).style.display='block';
+    document.getElementById('timerModal').style.display='flex';
+    let c = sec;
+    document.getElementById('count').innerText = c;
+    timer = setInterval(()=>{
+        c--;
+        document.getElementById('count').innerText = c;
+        if(c===0){
+            clearInterval(timer);
+            points++;
+            if(points>=10){ // ترقية المستوى
+                let idx = levels.indexOf(level);
+                if(idx<levels.length-1) level = levels[idx+1];
+                points=0;
+            }
+            localStorage.setItem('points', points);
+            localStorage.setItem('level', level);
+            updateLevelDisplay();
+            document.getElementById('count').innerText="✔";
+            document.getElementById(imgId).style.display='none';
+        }
+    },1000);
+}
+
+function closeTimer(){
+    clearInterval(timer);
+    document.getElementById('timerModal').style.display='none';
+    document.querySelectorAll('.exercise-img').forEach(img=>img.style.display='none');
+}
+
+// زر إعادة ضبط النقاط
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+    points=0;
+    level=levels[0];
+    localStorage.setItem('points', points);
+    localStorage.setItem('level', level);
+    updateLevelDisplay();
+});
+</script>
+</body>
+</html>
